@@ -1,6 +1,4 @@
 
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:gerenciador_tareas/model/tarefa.dart';
 
@@ -12,14 +10,12 @@ class ListaTarefaPage extends StatefulWidget{
 
 class _ListaTarefaPageState extends State<ListaTarefaPage>{
 
-  final _tarefas = <Tarefa> [
-    Tarefa(id: 1, descricao: 'Fazer as tarefas', prazo: DateTime.now().add(Duration(days: 5))),
-  ];
+  final _tarefas = <Tarefa> [];
 
   @override
   Widget build(BuildContext context){
     return Scaffold(
-      appBar: _criarAppBar(),
+      appBar: _criarAppBar(context),
       body: _criarBody(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
@@ -29,9 +25,9 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
     );
   }
 
-  AppBar _criarAppBar(){
-    backgroundColor: Theme.of(context).colorScheme.primaryContainer;
+  AppBar _criarAppBar(BuildContext context){
     return AppBar(
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       title: Text('Tarefas'),
       centerTitle: false,
       actions: [
@@ -44,7 +40,6 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
   }
 
   Widget _criarBody(){
-
     if(_tarefas.isEmpty){
       return  const Center(
         child: Text('Tudo certo por aqui!!!',
@@ -52,16 +47,15 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
         ),
       );
     }
-
     return ListView.separated(
         itemBuilder: (BuildContext context, int index){
           final tarefa = _tarefas[index];
           return ListTile(
             title: Text('${tarefa.id} - ${tarefa.descricao}'),
-            subtitle: Text(tarefa.prazoFormatado),
+            subtitle: Text('Prazo - ${tarefa.prazoFormatado}'),
     );
     },
-        separatorBuilder: (BuildContext context, int index) => Divider(),
+        separatorBuilder: (BuildContext context, int index) => const Divider(),
         itemCount: _tarefas.length,
     );
   }
