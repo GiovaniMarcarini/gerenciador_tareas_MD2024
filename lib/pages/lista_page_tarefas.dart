@@ -81,7 +81,7 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
     final navigator = Navigator.of(context);
     navigator.pushNamed(FiltroPage.ROUTE_NAME).then((alterouValor) {
       if(alterouValor == true){
-
+          // implementação de filtro
       }
     });
   }
