@@ -78,7 +78,6 @@ class _FiltroPageState extends State<FiltroPage>{
           child: TextField(
             decoration: InputDecoration(labelText: 'A descriçao começa com:'),
           ),
-
         ),
       ],
     );
