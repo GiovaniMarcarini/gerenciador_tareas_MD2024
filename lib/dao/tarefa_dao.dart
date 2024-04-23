@@ -29,10 +29,28 @@ class TarefaDao{
     return removerRegistro > 0;
   }
 
-  Future<List<Tarefa>> Lista() async{
+  Future<List<Tarefa>> Lista({
+    String filtro = '',
+    String campoOrdenacao = Tarefa.campo_id,
+    bool usarOrdemDecrescente = false,
+}) async{
     final db = await dbProvider.database;
+
+    String? where;
+    if(filtro.isNotEmpty){
+      where = "UPPER(${Tarefa.campo_descricao}) LIKE '${filtro.toUpperCase()}%'";
+    }
+
+    var orderBy= campoOrdenacao;
+    if (usarOrdemDecrescente){
+      orderBy += ' DESC';
+    }
+
     final resultado = await db.query(Tarefa.nome_tabela,
-    columns: [Tarefa.campo_id, Tarefa.campo_descricao, Tarefa.campo_prazo]);
+    columns: [Tarefa.campo_id, Tarefa.campo_descricao, Tarefa.campo_prazo],
+      where: where,
+      orderBy: orderBy,
+    );
     return resultado.map((m) => Tarefa.fromMap(m)).toList();
   }
 }

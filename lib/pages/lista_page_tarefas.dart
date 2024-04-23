@@ -4,6 +4,7 @@ import 'package:gerenciador_tareas/dao/tarefa_dao.dart';
 import 'package:gerenciador_tareas/model/tarefa.dart';
 import 'package:gerenciador_tareas/pages/filtro_page.dart';
 import 'package:gerenciador_tareas/widgets/conteudo_form_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ListaTarefaPage extends StatefulWidget{
 
@@ -26,7 +27,17 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
   }
 
   void _atualizarLista () async{
-    final tarefas = await _dao.Lista();
+    final prefs = await SharedPreferences.getInstance();
+
+    final _campoOrdenacao = prefs.getString(FiltroPage.CHAVE_CAMPO_ORDENACAO) ?? Tarefa.campo_id;
+    final _usarOrdemDecrescente = prefs.getBool(FiltroPage.CHAVE_ORDENAR_DECRESCENTE) == true;
+    final  _filtroDescricao = prefs.getString(FiltroPage.CHAVE_FILTRO_DESCRICAO) ?? '';
+
+    final tarefas = await _dao.Lista(
+      filtro: _filtroDescricao,
+      campoOrdenacao: _campoOrdenacao,
+      usarOrdemDecrescente: _usarOrdemDecrescente,
+    );
     setState(() {
       _tarefas.clear();
       if(tarefas.isNotEmpty){
@@ -98,7 +109,7 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
     final navigator = Navigator.of(context);
     navigator.pushNamed(FiltroPage.ROUTE_NAME).then((alterouValor) {
       if(alterouValor == true){
-          // implementação de filtro
+          _atualizarLista();
       }
     });
   }
