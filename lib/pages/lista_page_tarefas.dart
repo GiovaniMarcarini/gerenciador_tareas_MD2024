@@ -20,9 +20,19 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
   static const ACAO_EXCLUIR = 'excluir';
 
   @override
-  void initstate(){
+  void initState(){
     super.initState();
     _atualizarLista();
+  }
+
+  void _atualizarLista () async{
+    final tarefas = await _dao.Lista();
+    setState(() {
+      _tarefas.clear();
+      if(tarefas.isNotEmpty){
+        _tarefas.addAll(tarefas);
+      }
+    });
   }
 
   @override
@@ -198,15 +208,5 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
           );
         }
     );
-  }
-
-  void _atualizarLista () async{
-    final tarefas = await _dao.Lista();
-    setState(() {
-      _tarefas.clear();
-      if(tarefas.isNotEmpty){
-        _tarefas.addAll(tarefas);
-      }
-    });
   }
 }
