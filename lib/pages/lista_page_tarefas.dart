@@ -17,6 +17,8 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
   final _tarefas = <Tarefa> [];
   final _dao = TarefaDao();
 
+  var _carregando = false;
+
   static const ACAO_EDITAR = 'editar';
   static const ACAO_EXCLUIR = 'excluir';
 
@@ -27,8 +29,11 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
   }
 
   void _atualizarLista () async{
-    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _carregando = true;
+    });
 
+    final prefs = await SharedPreferences.getInstance();
     final _campoOrdenacao = prefs.getString(FiltroPage.CHAVE_CAMPO_ORDENACAO) ?? Tarefa.campo_id;
     final _usarOrdemDecrescente = prefs.getBool(FiltroPage.CHAVE_ORDENAR_DECRESCENTE) == true;
     final  _filtroDescricao = prefs.getString(FiltroPage.CHAVE_FILTRO_DESCRICAO) ?? '';
@@ -41,6 +46,7 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
     setState(() {
       _tarefas.clear();
       if(tarefas.isNotEmpty){
+        _carregando = false;
         _tarefas.addAll(tarefas);
       }
     });
@@ -74,6 +80,30 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
   }
 
   Widget _criarBody(){
+    if(_carregando){
+      return const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Align(
+            alignment: AlignmentDirectional.center,
+            child: CircularProgressIndicator(),
+          ),
+          Align(
+            alignment: AlignmentDirectional.center,
+            child: Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Text('Carregando suas Tarefas!',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+              ),
+            ),
+          )
+        ],
+      );
+    }
+
     if(_tarefas.isEmpty){
       return  const Center(
         child: Text('Tudo certo por aqui!!!',
