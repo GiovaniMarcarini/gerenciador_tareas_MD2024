@@ -47,7 +47,7 @@ class TarefaDao{
     }
 
     final resultado = await db.query(Tarefa.nome_tabela,
-    columns: [Tarefa.campo_id, Tarefa.campo_descricao, Tarefa.campo_prazo],
+    columns: [Tarefa.campo_id, Tarefa.campo_descricao, Tarefa.campo_prazo, Tarefa.campo_finalizado],
       where: where,
       orderBy: orderBy,
     );
