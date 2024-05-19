@@ -47,10 +47,15 @@ class _ListaTarefaPageState extends State<ListaTarefaPage>{
     );
     setState(() {
       _tarefas.clear();
-      if(tarefas.isNotEmpty){
+      //if(tarefas.isNotEmpty){
+        // Esse IF faz com que _carregando seja alterado para false somente quando "tarefas" não estiver vazio.
+        // Caso "tarefas" esteja vazio, a mensagem "Carregando suas Tarefas!" permanecerá infinitamente na tela, junto com o ícone de carregamento, até que seja adicionado uma tarefa.
+        // Se acrescentar a condição (tarefas.isEmpty) também irá solucionar o problema,
+        // porém, "tarefas" vai estar vazio ou não vazio (sem um meio termo), então só retirar o IF resolve.
+        // Obs: retirar somente a condição, os códigos dentro do IF permanecem para serem executados.
         _carregando = false;
         _tarefas.addAll(tarefas);
-      }
+      //}
     });
   }
 
